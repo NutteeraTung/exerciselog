@@ -25,3 +25,9 @@ form.addEventListener('submit', e => {
       console.error('Fetch error:', error);
     });
 });
+fetch(scriptURL, {
+  method: 'POST',
+  mode: 'no-cors',
+  body: new FormData(form)
+})
+
