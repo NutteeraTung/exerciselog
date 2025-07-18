@@ -1,21 +1,27 @@
-document.getElementById("exercise-form").addEventListener("submit", function (e) {
-  e.preventDefault();
-  const form = e.target;
-  const data = Object.fromEntries(new FormData(form));
+// === ตั้ง URL ของ Google Apps Script ที่คุณ Deploy แล้ว ===
+const scriptURL = 'https://script.google.com/macros/s/AKfycbyhbflT-cj5x9w75RyGuDAm6kkMhUj8rEpzk_ra5yMUyQQPDMkmok5dnq-cqRlNW4CW/exec'; // แก้ตรงนี้
 
-  fetch("https://script.google.com/macros/s/AKfycbzNlY1OUUmmlGTGk5vinVU4eS8khWhS3DwsPkW2768kdDGmBO4T4yjfJ1mon2_Asbo5/exec", {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((res) => res.text())
-    .then((msg) => {
-      document.getElementById("response-message").innerText = "บันทึกสำเร็จ!";
-      form.reset();
+const form = document.forms['exercise-form'];
+const message = document.getElementById('message');
+
+form.addEventListener('submit', e => {
+  e.preventDefault(); // ป้องกัน reload หน้า
+
+  // แสดงข้อความระหว่างส่งข้อมูล
+  message.innerHTML = '⏳ กำลังบันทึก...';
+
+  fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+    .then(response => {
+      if (response.ok) {
+        message.innerHTML = '✅ บันทึกสำเร็จ!';
+        form.reset(); // เคลียร์ข้อมูลในฟอร์ม
+      } else {
+        message.innerHTML = '❌ เกิดข้อผิดพลาดในการบันทึก';
+        console.error('Error submitting form:', response.statusText);
+      }
     })
-    .catch((err) => {
-      document.getElementById("response-message").innerText = "เกิดข้อผิดพลาด";
+    .catch(error => {
+      message.innerHTML = '🚫 ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้';
+      console.error('Fetch error:', error);
     });
 });
