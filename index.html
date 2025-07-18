@@ -2,47 +2,67 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Exercise Logger</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ซ่อน iframe */
+    #hidden_iframe {
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <img src="https://cdn-icons-png.flaticon.com/512/2331/2331942.png" class="logo" alt="exercise icon" />
+      <img src="https://cdn-icons-png.flaticon.com/512/2331/2331942.png" alt="exercise icon" style="width:50px; height:50px;" />
       <h1>Exercise Log</h1>
     </header>
 
-    <form 
-  name="exercise-form"
-  action="https://script.google.com/macros/s/AKfycby99v5aRq41cd9KQSd2wggA0JUBBeQYlCao47cc-opYkjifd54OFPLhuKidtTCetNYq/exec" 
-  method="POST"
-  target="hidden_iframe"
-  onsubmit="submitted=true;"
->
-  <input name="name" placeholder="ชื่อ" required />
-  <input name="year" placeholder="ปี" required />
-  <input name="month" placeholder="เดือน" required />
-  <input name="day" placeholder="วันที่" required />
-  <input name="type" placeholder="ประเภทการออกกำลังกาย" required />
-  <input name="distance" placeholder="ระยะทาง (กม)" />
-  <input name="duration" placeholder="ระยะเวลา (00:30:00)" />
-  <input name="pace" placeholder="Pace (min/km)" />
-  <input name="kcal" placeholder="Kcal" />
-  <input name="vo2max" placeholder="VO2Max" />
-  <textarea name="note" placeholder="หมายเหตุ"></textarea>
-  <button type="submit">บันทึก</button>
-</form>
+    <form
+      id="exercise-form"
+      name="exercise-form"
+      action="https://script.google.com/macros/s/AKfycby99v5aRq41cd9KQSd2wggA0JUBBeQYlCao47cc-opYkjifd54OFPLhuKidtTCetNYq/exec" 
+      method="POST"
+      target="hidden_iframe"
+      onsubmit="submitted=true;"
+    >
+      <input name="name" placeholder="ชื่อ" required />
+      <input name="year" placeholder="ปี" required pattern="\d{4}" title="ใส่ปี 4 หลัก เช่น 2025" />
+      <input name="month" placeholder="เดือน" required pattern="\d{1,2}" title="ใส่เดือนเป็นตัวเลข 1-12" />
+      <input name="day" placeholder="วันที่" required pattern="\d{1,2}" title="ใส่วันที่เป็นตัวเลข 1-31" />
+      <input name="type" placeholder="ประเภทการออกกำลังกาย" required />
+      <input name="distance" placeholder="ระยะทาง (กม)" type="number" step="0.01" />
+      <input name="duration" placeholder="ระยะเวลา (00:30:00)" pattern="^\d{2}:\d{2}:\d{2}$" title="รูปแบบ HH:MM:SS" />
+      <input name="pace" placeholder="Pace (min/km)" />
+      <input name="kcal" placeholder="Kcal" type="number" />
+      <input name="vo2max" placeholder="VO2Max" />
+      <textarea name="note" placeholder="หมายเหตุ"></textarea>
+      <button type="submit">บันทึก</button>
+    </form>
 
-<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted){ alert('✅ บันทึกสำเร็จ!'); document.forms['exercise-form'].reset(); }"></iframe>
-
-<script>
-  let submitted = false;
-</script>
-
-
-    <p id="message"></p>
+    <p id="response-message"></p>
   </div>
-  <script src="script.js"></script>
+
+  <iframe
+    name="hidden_iframe"
+    id="hidden_iframe"
+  ></iframe>
+
+  <script>
+    let submitted = false;
+
+    const form = document.getElementById('exercise-form');
+    const message = document.getElementById('response-message');
+    const iframe = document.getElementById('hidden_iframe');
+
+    // ฟังค์ชันแสดงข้อความหลังส่งข้อมูลสำเร็จ (เมื่อ iframe โหลดเสร็จ)
+    iframe.onload = function() {
+      if (submitted) {
+        message.textContent = "✅ บันทึกสำเร็จ!";
+        form.reset();
+        submitted = false;
+      }
+    };
+  </script>
 </body>
 </html>
