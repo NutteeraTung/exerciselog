@@ -1,5 +1,5 @@
 // === ตั้ง URL ของ Google Apps Script ที่คุณ Deploy แล้ว ===
-const scriptURL = 'https://script.google.com/macros/s/AKfycby99v5aRq41cd9KQSd2wggA0JUBBeQYlCao47cc-opYkjifd54OFPLhuKidtTCetNYq/exec; // แก้ตรงนี้
+const scriptURL = 'https://script.google.com/macros/s/AKfycby99v5aRq41cd9KQSd2wggA0JUBBeQYlCao47cc-opYkjifd54OFPLhuKidtTCetNYq/exec'; // แก้ตรงนี้
 
 const form = document.getElementById('exercise-form');
 const message = document.getElementById('message');
